@@ -30,12 +30,14 @@
 \usepackage{times} % Use the times font
 %\usepackage{palatino} % Uncomment to use the Palatino font
 
+\usepackage{array} % Required for tables
 \usepackage{graphicx} % Required for including images
 \graphicspath{{figures/}} % Location of the graphics files
 \usepackage{booktabs} % Top and bottom rules for table
 \usepackage[font=small,labelfont=bf]{caption} % Required for specifying captions to tables and figures
 \usepackage{amsfonts, amsmath, amsthm, amssymb} % For math fonts, symbols and environments
 \usepackage{wrapfig} % Allows wrapping text around tables and figures
+%% \usepackage{natbib} % Allows for more flexible references
 
 %% A few new commands
 \newcommand*{\barbar}[1]{\overline{\overline{#1}}}
@@ -78,30 +80,32 @@
 \begin{multicols}{3} % This is how many columns your poster will be broken into, a portrait poster is generally split into 2 columns
 
 %----------------------------------------------------------------------------------------
-%   ABSTRACT
-%----------------------------------------------------------------------------------------
-
-\color{Navy} % Navy color for the abstract
-
-\begin{abstract}
-Modern precision medicine increasingly relies on molecular data analytics, wherein development of interpretable single-subject (``N-of-1'') signals is a challenging goal.  A previously developed global framework, N-of-1-\emph{pathways}, employs single-subject gene expression data to identify differentially expressed gene set pathways (DEPs) in an individual patient.  Unfortunately, the limited amount of data within the single-subject, N-of-1 setting makes construction of suitable statistical inferences for identifying DEPs difficult, especially when non-trivial inter-gene correlation is present.  We propose a method that exploits external information on gene expression correlations to cluster positively co-expressed genes within pathways, then assesses differential expression across the clusters within a pathway.
-%\sout{The clustering can persuasively uncover the genetic patterns of association within pathways.}
-A simulation study illustrates that the cluster-based approach exhibits satisfactory false-positive error control and reasonable power to detect DEPs.  An example with a single N-of-1 patient's triple negative breast cancer data illustrates use of the methodology.
-\end{abstract}
-%----------------------------------------------------------------------------------------
+%% %   ABSTRACT
+%% %----------------------------------------------------------------------------------------
+ 
+%% \color{Navy} % Navy color for the abstract
+%% 
+%% \begin{abstract}
+%% Modern precision medicine increasingly relies on molecular data analytics, wherein development of interpretable single-subject (``N-of-1'') signals is a challenging goal.  A previously developed global framework, N-of-1-\emph{pathways}, employs single-subject gene expression data to identify differentially expressed gene set pathways (DEPs) in an individual patient.  Unfortunately, the limited amount of data within the single-subject, N-of-1 setting makes construction of suitable statistical inferences for identifying DEPs difficult, especially when non-trivial inter-gene correlation is present.  We propose a method that exploits external information on gene expression correlations to cluster positively co-expressed genes within pathways, then assesses differential expression across the clusters within a pathway.
+%% %\sout{The clustering can persuasively uncover the genetic patterns of association within pathways.}
+%% A simulation study illustrates that the cluster-based approach exhibits satisfactory false-positive error control and reasonable power to detect DEPs.  An example with a single N-of-1 patient's triple negative breast cancer data illustrates use of the methodology.
+%% \end{abstract}
+  
+% ----------------------------------------------------------------------------------------
 %   INTRODUCTION
 %----------------------------------------------------------------------------------------
 
 \color{Black} % SaddleBrown color for the introduction
-\section*{Introduction}
+\section{Introduction}
 
-\subsection*{Motivating data \& background}
+\subsection{Objective}
+  Develop a hypothesis testing framework to detectt diffirentyriall exprereds pathways (gene sets) wfor m a pair of ssamples form a  patiant.
+
+\subsection{Motivating data \& background}
 %% \subsection{Motivating data}
 
 Example paired RNA-seq quantified mRNA (normalized) expression data (from The Cancer Genome Atlas\cite{weinstein2013cancer} in a Gene Ontology\cite{Ashburner2000} pathway.
 
-\begin{table}
-\label{tab:TNBCdata}
 \begin{tabular}{l|ccc}
 \hline
 Gene & Case expression & Baseline expression & Difference\\
@@ -117,46 +121,32 @@ Gene & Case expression & Baseline expression & Difference\\
   \emph{SERPINF2}  & 6.38  & 9.57  & -3.19 \\
 \hline
 \end{tabular}
-\end{table}
 
 %----------------------------------------------------------------------------------------
 %   N-of-1-pathways
 %----------------------------------------------------------------------------------------
 
 \color{Black} % DarkSlateGray color for the rest of the content
-\subsection*{The N-of-1-{\itshape pathways} framework}
+\subsection{The N-of-1-{\itshape pathways} framework}
 
 The first attempt at a testing procedure employed a Wilcoxon signed-rank test\cite{Gardeux2014}.
 
 \begin{center}\vspace{1cm}
-\includegraphics[width=0.8\linewidth]{N-of-1-pathways-dep-flowchart}
+\includegraphics[width=1\linewidth]{N-of-1-pathways-dep-flowchart}
 \captionof{figure}{\color{Green} Workflow to enable precision medicioen from a par af osamples.Translat.}
 \end{center}%\vspace{1cm}
 
 % ----------------------------------------------------------------------------------------
 %   Clustered-T
 %----------------------------------------------------------------------------------------
-\section*{Hypothesis testing:~the Clustered-$T$ statistic}
-\subsection*{Motivation \& development}
+\section{The Clustered-$T$ test statistic}
+\subsection{Motivation \& development}
 
-Major issue:~inter-gene correlations complicate testing
+Major issue:~inter-gene correlations complicate testing as mRNAs are likely co-expressed (correlated) within pathways.\\
+Accounting for inter-gene correlation in gene set testing is an active area of research\cite{Tamayo2016} See Figure 2.
+We employ a cluster-correlated variance estimator\cite{Williams2000}.
 
-We'd like to test:\\
-$H_{0}$:~Pathway is not differentially expressed. \\
-$H_{a}$:~Pathway is differentially expressed.\\
-But mRNAs are likely co-expressed (correlated) within pathways.\\
-Accounting for inter-gene correlation in gene set testing is an active area of research\cite{Wu2012,Tamayo2016}
-
-%% \begin{center}\vspace{1cm}
-%% \includegraphics[width=1.0\linewidth]{cT_r_hist_fig_S1_small}
-%% \captionof{figure}{\color{Green} Pairs of genes are correlated (co-expression) within patients. Here are the perason corrrelatino coefficinecnts for all p30 chosse 2 paris of genes in the pathw,a etimeatie across 111 paitenst in tcga genome atles.}
-%% \end{center}\vspace{1cm}
-%% 
-
-\subsection*{A cluster-correlated variance estimator}
-
-  Williams, Rick L. "A note on robust variance estimation for cluster-correlated data." Biometrics 56.2 (2000): 645-646.
-
+\begin{table}[h]
   \begin{tabular}{r | c | l }
     Concept & Symbol & Definition \\
     \hline \hline
@@ -168,12 +158,15 @@ Accounting for inter-gene correlation in gene set testing is an active area of r
       Grand mean & $\barbar{d}$ & $d_{\scriptscriptstyle{++}}/G$ \\
       Cluster sum & $d_{j\scriptscriptstyle{+}}$ & $\sum_k d_{jk}$ \\
       Cluster mean & $\overbar{d}$ & $\sum_j d_{j\scriptscriptstyle{+}}/m$ \\
-      Sample variance & $S_{d}^{2}$ & $\frac{1}{m-1}\sum_j(d_{j\scriptscriptstyle{+}} - \overbar{d})^2$\\
-\end{tabular}
+    Sample variance & $S_{d}^{2}$ & $\frac{1}{m-1}\sum_j(d_{j\scriptscriptstyle{+}} - \overbar{d})^2$\\
+  \end{tabular}
+  \caption{\label{tab:table-name}Your caption.}
+  \end{table}
+
 
 %------------------------------------------------
 
-\subsection*{Williams' robust variance estimator\cite{Williams2000}}
+\subsection{Williams' robust variance estimator\cite{Williams2000}}
 
 Assume centered, cluster-correlated data:
 
@@ -193,7 +186,7 @@ Then an unbiased variance estimator\footnotemark~for the grand sum is
 \widehat{\text{Var}}[d_{\scriptscriptstyle{++}}] = \frac{m}{m-1}\sum_{j=1}^m(d_{j+} - \overbar{d})^2.
 \end{equation*}
 %\pause
-\centering Clearly, $\widehat{\text{Var}}[d_{\scriptscriptstyle{++}}] = mS_d^2$.
+Clearly, $\widehat{\text{Var}}[d_{\scriptscriptstyle{++}}] = mS_d^2$.
 
 %------------------------------------------------
 
@@ -211,15 +204,11 @@ Hypotheses
 
 %------------------------------------------------
 
-Reference distribution
-  
-      Modeling assumptions under $H_0$
-        \begin{itemize}
-        \item{Conditional on the cluster assignments.}
-        \item{Further assume $D_{j\scriptscriptstyle{+}} \sim N(0, \sigma^2)$.}
-        \end{itemize}
-%\pause
-      Then the Clustered-$T$ statistic{\footnotemark}
+\subsection{Reference distribution}
+Modeling assumptions under $H_0$:\\
+Conditional on the cluster assignments.
+Further assume $D_{j\scriptscriptstyle{+}} \sim N(0, \sigma^2)$.
+Then the Clustered-$T$ statistic{\footnotemark}:\\
 \begin{equation*}
   \label{eq:tstat}
 T =  \frac{\overbar{d}}{S_d/\sqrt{m}}
@@ -233,10 +222,10 @@ A (two-sided) P-value is $2\times\text{Pr}[t(m-1) \ge |T|]$.
 % ----------------------------------------------------------------------------------------
 %   Monte Carol Evaluation
 %----------------------------------------------------------------------------------------
-\section*{Monte Carlo evaluation}
-\subsection*{Simulation settings}
+\section{Monte Carlo evaluation}
+\subsection{Simulation settings}
 
-  \begin{center}
+\begin{center}
 \begin{tabular}{lll}
 Design \\variable & Description & Values\\
 \hline
@@ -256,7 +245,7 @@ $\mathbf{R}$ & pathway correlation structure & \{Independent, Block, All\}\\
 \footnotetext{DEG = differentially expressed gene}
 
 % ------------------------------------------------
-\subsection*{Defining realistic gene sets}
+\subsection{Defining realistic gene sets}
 \begin{center}\vspace{1cm}
 \includegraphics[width=0.8\linewidth]{cT_r_hist_fig_S1_all}
 \captionof{figure}{\color{Green} Main Algerian geothermal areas (Fekraoui and Abouriche, 1995)}
@@ -264,10 +253,10 @@ $\mathbf{R}$ & pathway correlation structure & \{Independent, Block, All\}\\
 
 % ------------------------------------------------
 
-\subsection*{Simulating pathways via copulas}
+\subsection{Simulating pathways via copulas}
 2000 simulated bivariate gene counts with specified correlation of 0.49, simulated using copulas\cite{Genest2007,Yan2007}
 \begin{center}\vspace{1cm}
-\includegraphics[width=0.8\linewidth]{copula_viz}
+\includegraphics[width=0.5\linewidth]{copula_viz}
 \captionof{figure}{\color{Green} Main Algerian geothermal areas (Fekraoui and Abouriche, 1995)}
 \end{center}\vspace{1cm}
 
@@ -282,30 +271,32 @@ $\mathbf{R}$ & pathway correlation structure & \{Independent, Block, All\}\\
 \begin{center}\vspace{1cm}
 \includegraphics[width=0.8\linewidth]{clustered_T_power_small}
 \captionof{figure}{\color{Green} Simulation results:~power for the Clustered-\itshape{T}}
-\end{center}\vspace{1cm}
+\end{center}\vspace{0.2cm}
 
 %----------------------------------------------------------------------------------------
 %   Application
 %----------------------------------------------------------------------------------------
-\subsection{Application:single-subject inference for TNBC patient}
-Four top-hit differentially expressed pathways for a TNBC patient when testing 3411 GO-BP pathways.
+\section{Application}
+
+Single-subject inference for a triple negative breast cancer patient.
+ Four top-hit differentially expressed pathways for a TNBC patient when testing 3411 GO-BP pathways.
 
 %% \begin{table}
 %%    \label{tab:topHits}
 %% %%\begin{tabular}{>{\raggedright}p{0.375\linewidth} | c | c | c |c |c}
-%%   \hspace*{0pt}\makebox[\linewidth][c]{\begin{tabular}{>{\raggedright}p{0.375\linewidth} | c | c | c |c |c}
-%%   Gene set description & $\barbar{D}$ & $T$-stat & P-value & $G$ & $m$ \\
-%%    \hline \hline
-%%   pos reg of cell adhesion & -0.75 & -4.92 & 0.00011 & 226 & 19 \\
-%%   \hline
-%%   reg of resp to external stimulus & -0.47 & -4.42 & 0.00015 & 458 & 28 \\
-%%   \hline
-%%   mitochondrial translational initiation & \phantom{-}0.28 & \phantom{-}7.55 & 0.00028 & 84 & 7 \\
-%%   \hline
-%%   regulation of cell morphogenesis involved in differentiation & -0.51 & -4.80 & 0.00028 & 168 & 15 \\
-%%   \hline
-%%   \end{tabular}
-%%  }
+%%  \hspace*{0pt}\makebox[\linewidth][c]
+\begin{tabular} {>{\raggedright}p{0.375\linewidth} | c | c | c |c |c}
+   Gene set description & $\barbar{D}$ & $T$-stat & P-value & $G$ & $m$ \\
+    \hline \hline
+   pos reg of cell adhesion & -0.75 & -4.92 & 0.00011 & 226 & 19 \\
+   \hline
+   reg of resp to external stimulus & -0.47 & -4.42 & 0.00015 & 458 & 28 \\
+   \hline
+   mitochondrial translational initiation & \phantom{-}0.28 & \phantom{-}7.55 & 0.00028 & 84 & 7 \\
+   \hline
+   regulation of cell morphogenesis involved in differentiation & -0.51 & -4.80 & 0.00028 & 168 & 15 \\
+   \hline
+   \end{tabular}
 %%  \end{table}
 %% %\captionof{80 DEPs at BH 5\%, 601 DEPs at nominal 5\%}
 
@@ -313,40 +304,37 @@ Four top-hit differentially expressed pathways for a TNBC patient when testing 3
 %   CONCLUSIONS
 %----------------------------------------------------------------------------------------
 
-\color{SaddleBrown} % SaddleBrown color for the conclusions to make them stand out
+\color{Black} % SaddleBrown color for the conclusions to make them stand out
 
+\section{Concluding remarks}
 
-\section*{Illustrative summary}
+\subsection{Illustrative summary}
 \begin{center}\vspace{1cm}
-\includegraphics[width=0.8\linewidth]{NxT_MD_fig1_summary}
+\includegraphics[width=0.6\linewidth]{NxT_MD_fig1_summary}
 \captionof{figure}{\color{Green} Simulation results:~power for the Clustered-\itshape{T}}
 \end{center}\vspace{1cm}
 
-\section*{Conclusions}
-Despite being a petroleum- and gas-rich country, Algeria is making efforts to exploit its renewable energies. The Algerian government has adopted new renewable energy laws and financial support for the investors to facilitate the exploitation of the renewable energies for electricity production and direct utilizations. Algeria has relatively abundant geothermal resources especially in the northeastern parts but not totally used.
-\color{Black} % Set the color back to DarkSlateGray for the rest of the content
+%----------------------------------------------------------------------------------------
+%   FORTHCOMING RESEARCH
+%----------------------------------------------------------------------------------------
+
+%% \subsection*{Forthcoming Research}
+%% 
+%% Simulation of thermodynamic properties of the thermal fluid and power output with longevity using geological, hydrogeological, and geothermal data from NE-Algerian geothermal reservoirs. 
 
 %----------------------------------------------------------------------------------------
 %   FORTHCOMING RESEARCH
 %----------------------------------------------------------------------------------------
 
-\section*{Forthcoming Research}
+\subsection*{Acknowledgments}
 
-Simulation of thermodynamic properties of the thermal fluid and power output with longevity using geological, hydrogeological, and geothermal data from NE-Algerian geothermal reservoirs. 
-
-%----------------------------------------------------------------------------------------
-%   FORTHCOMING RESEARCH
-%----------------------------------------------------------------------------------------
-
-\section*{acknowledgements}
-
-The results published here are in whole or part based upon data generated by the TCGA Research Network: http:// cancergenome.nih.gov/. We gratefully acknowledge the kind and helpful input of Mr. Qike Li, Dr. Joanne Berghout, Dr. Ikbel Achour, Dr. Colleen Kenost, Dr. Haiquan Li, Dr. Nima Pouladi, Dr. Ryan Gutenkunst, and Dr. Joseph Watkins. In addition, thanks are due the Editor and two anonymous referees for insightful comments that greatly improved the quality of the manuscript. This work represents a portion of the first author’s Ph.D. dissertation from the University of Arizona Graduate Interdisciplinary Program in Statistics. This material is based upon work supported by the U.S. National Science Foundation under Grant No. 1228509 and by the U.S. National Institutes of Health under Grant No. R03ES027394.
+We gratefully acknowledge the kind and helpful input of Mr. Qike Li, Dr. Joanne Berghout, Dr. Ikbel Achour, Dr. Colleen Kenost, Dr. Haiquan Li, Dr. Nima Pouladi, Dr. Ryan Gutenkunst, and Dr. Joseph Watkins. This material is based upon work supported by the U.S. National Science Foundation under Grant No. 1228509 and by the U.S. National Institutes of Health under Grant No. R03ES027394.
  %----------------------------------------------------------------------------------------
 %   REFERENCES
 %----------------------------------------------------------------------------------------
 
 %% \nocite{*} % Print all references regardless of whether they were cited in the poster or not
-\bibliographystyle{plain} % Plain referencing style
+\bibliographystyle{cj} % Plain referencing style
 \bibliography{poster_RSS_2018_bib} % Use the example bibliography file sample.bib
 
 %----------------------------------------------------------------------------------------
