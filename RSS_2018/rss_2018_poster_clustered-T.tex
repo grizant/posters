@@ -55,25 +55,24 @@
 % The second is 25% wide and houses a logo for your university/organization or a photo of you
 % The widths of these boxes can be easily edited to accommodate your content as you see fit
 
-\begin{minipage}[b]{0.75\linewidth}
-\VeryHuge \color{NavyBlue} \textbf{Testing for differentially expressed genetic pathways with single-subject N-of-1 data in the presence of inter-gene correlation} \color{Black}\\ % Title
+\begin{minipage}[b]{0.8\linewidth}
+\VeryHuge \color{NavyBlue} \textbf{Testing for differentially expressed genetic pathways with single-subject N-of-1 data in the presence of inter-gene correlation~\cite{Schissler2018}} \color{Black}\\ % Title
 %% \Huge\textit{Country Update}\\[2.4cm] % Subtitle
-[2.4cm]
-\Huge \textbf{\underline{A.~Grant Schissler},~Walter W.~Piegorsch,~and Yves A.~Lussier}\\[0.5cm] % Author(s)
-\huge Department of Mathematics \& Statistics, University of Nevada, Reno, NV, USA\\[0.4cm] % University/organization
-{\huge Interdisciplinary Program in Statistics, Center for Biomedical Informatics and Biostatistics (CB2), BIO5 Institute, Department of Medicine, Department of Mathematics, University of Arizona, Tucson, AZ, USA}\\[0.4cm]
-\Large \texttt{aschissler@unr.edu}\\
+[1.0cm]
+\Huge \textbf{\underline{A.~Grant Schissler$^{1}$},~Walter$^{2-5}$ W.~Piegorsch,~and Yves A.~Lussier$^{4-6}$}\\[0.5cm] % Author(s)
+\huge $^{1}$Department of Mathematics \& Statistics, University of Nevada, Reno, NV, USA\\[0.4cm] % University/organization
+{\huge $^{2}$Interdisciplinary Program in Statistics, $^{3}$Department of Mathematics, $^{4}$Center for Biomedical Informatics and Biostatistics (CB2), $^{5}$BIO5 Institute, $^{6}$Department of Medicine, University of Arizona, Tucson, AZ, USA}.
+%\Large \texttt{aschissler@unr.edu}\\
 \end{minipage}
 %
-\begin{minipage}[b]{0.25\linewidth}
+\begin{minipage}[b]{0.2\linewidth}
   \centering
   \includegraphics[width=8cm]{nevada-vertical-blue.png}\\
   \includegraphics[width=8cm]{uofa_logo.jpeg}\\
   \includegraphics[width=8cm]{stat_logo_REDBLU.jpg}\\
-
 \end{minipage}
 
-\vspace{1cm} % A bit of extra whitespace between the header and poster content
+\vspace{0cm} % A bit of extra whitespace between the header and poster content
 
 %----------------------------------------------------------------------------------------
 
@@ -98,17 +97,16 @@
 \color{Black} % SaddleBrown color for the introduction
 \section{Introduction}
 
-\subsection{Objective}
-  Develop a hypothesis testing framework to detectt diffirentyriall exprereds pathways (gene sets) wfor m a pair of ssamples form a  patiant.
+We seek to assess a patient's differential RNA expression, but \textit{not} for individual genes --- for collections of genes (a gene set or \textit{pathway}). We call this finding Differentially Expressed Pathways (DEPs) as opposed to Differentially Expressed Genes (DEGs). 
 
 \subsection{Motivating data \& background}
 %% \subsection{Motivating data}
 
-Example paired RNA-seq quantified mRNA (normalized) expression data (from The Cancer Genome Atlas\cite{weinstein2013cancer} in a Gene Ontology\cite{Ashburner2000} pathway.
+The table below contains paired RNA-seq ($log_{2}$-normalized) expression data derived from a triple negative breast cancer patient~\cite{weinstein2013cancer} within a Gene Ontology~\cite{Ashburner2000} pathway.\\
 
 \begin{tabular}{l|ccc}
 \hline
-Gene & Case expression & Baseline expression & Difference\\
+Gene & Tumor expression &  Normal expression & Difference\\
 \hline
   \emph{CYP4A11}   & 0.00  & 3.71  & -3.71 \\
   \emph{AGTR1}     & 6.13  & 7.86  & -1.73 \\
@@ -127,27 +125,33 @@ Gene & Case expression & Baseline expression & Difference\\
 %----------------------------------------------------------------------------------------
 
 \color{Black} % DarkSlateGray color for the rest of the content
-\subsection{The N-of-1-{\itshape pathways} framework}
-
-The first attempt at a testing procedure employed a Wilcoxon signed-rank test\cite{Gardeux2014}.
+\subsection{The N-of-1-{\itshape pathways} clinical framework~\cite{Gardeux2014}}
 
 \begin{center}\vspace{1cm}
 \includegraphics[width=1\linewidth]{N-of-1-pathways-dep-flowchart}
-\captionof{figure}{\color{Green} Workflow to enable precision medicioen from a par af osamples.Translat.}
+\captionof{figure}{\color{Black} Conceptual workflow to enable precision medicine from within-patient, paired expression data.}
 \end{center}%\vspace{1cm}
 
 % ----------------------------------------------------------------------------------------
 %   Clustered-T
 %----------------------------------------------------------------------------------------
 \section{The Clustered-$T$ test statistic}
-\subsection{Motivation \& development}
+%%\subsection{Motivation \& rationale}
+We seek to improve upon the first N-of-1-\textit{pathways} testing procedure, a Wilcoxon signed-rank test~\cite{Gardeux2014}. The major issue is that inter-gene correlations invalid modeling assumptions~\cite{Tamayo2016}.
 
-Major issue:~inter-gene correlations complicate testing as mRNAs are likely co-expressed (correlated) within pathways.\\
-Accounting for inter-gene correlation in gene set testing is an active area of research\cite{Tamayo2016} See Figure 2.
-We employ a cluster-correlated variance estimator\cite{Williams2000}.
+\begin{center}\vspace{1cm}
+\includegraphics[width=0.8\linewidth]{cT_r_hist_fig_S1_all}
+\captionof{figure}{\color{Black} Evidence of gene co-expression within pathways:~Pearson correlation estimates across all pairs of genes within 6 Gene Ontology pathways, derived from 111 breast cancer patients.}
+\end{center}\vspace{1cm}
 
-\begin{table}[h]
-  \begin{tabular}{r | c | l }
+% ------------------------------------------------
+\subsection{Clustering of positively co-expressed genes}
+Accounting for inter-gene correlatinot is difficutlt with only limtied samples. Instead of estimating directly, we use a robust cluster-correlated variance estimator~\cite{Williams2000}. This requires that we cluster genes \textit{a priori}, using a database of samples. We omit the clustering procedure here, see Reference~\cite{Schissler2018} for details.
+
+\subsection{Notation}
+Once clustered, we develop our statistic using the following notation:\\
+
+\begin{tabular}{r | c | l }
     Concept & Symbol & Definition \\
     \hline \hline
       Observation index & $k$ & $k = 1,2,\ldots,n_j$ \\
@@ -160,77 +164,58 @@ We employ a cluster-correlated variance estimator\cite{Williams2000}.
       Cluster mean & $\overbar{d}$ & $\sum_j d_{j\scriptscriptstyle{+}}/m$ \\
     Sample variance & $S_{d}^{2}$ & $\frac{1}{m-1}\sum_j(d_{j\scriptscriptstyle{+}} - \overbar{d})^2$\\
   \end{tabular}
-  \caption{\label{tab:table-name}Your caption.}
-  \end{table}
-
 
 %------------------------------------------------
-
-\subsection{Williams' robust variance estimator\cite{Williams2000}}
-
-Assume centered, cluster-correlated data:
-
-\begin{itemize}
-  
-\item{$E[d_{jk}]=0$}.
-  
-\item{$cov[d_{jk},d_{jk^{\prime}}]=\sigma_{jkk^{\prime}}$}.
-  
-\item{$cov[d_{jk},d_{j^{\prime}k^{\prime}}]=0$ when $j\neq j^{\prime}$}.
-  
-\end{itemize}
-
-Then an unbiased variance estimator\footnotemark~for the grand sum is
-\begin{equation*}
+\subsection{Williams' robust variance estimator~\cite{Williams2000}}
+Modeling the differences as centered and cluster-correlated ( $E[d_{jk}]=0$, $cov[d_{jk},d_{jk^{\prime}}]=\sigma_{jkk^{\prime}}$, and $cov[d_{jk},d_{j^{\prime}k^{\prime}}]=0$ when $j\neq j^{\prime}$),
+%% \begin{itemize}
+%% \item{$E[d_{jk}]=0$}.
+%% \item{$cov[d_{jk},d_{jk^{\prime}}]=\sigma_{jkk^{\prime}}$}.
+%% \item{$cov[d_{jk},d_{j^{\prime}k^{\prime}}]=0$ when $j\neq j^{\prime}$}.
+%% \end{itemize}
+we use an unbiased variance estimator for the grand sum:
+\begin{equation}
 \label{eq:var}
 \widehat{\text{Var}}[d_{\scriptscriptstyle{++}}] = \frac{m}{m-1}\sum_{j=1}^m(d_{j+} - \overbar{d})^2.
-\end{equation*}
+\end{equation}
 %\pause
 Clearly, $\widehat{\text{Var}}[d_{\scriptscriptstyle{++}}] = mS_d^2$.
-
 %------------------------------------------------
 
-Hypotheses
-  Denote $\mu = E\left(\barbar{D}\right)$ and let this quantity represent the true magnitude of pathway differential expression.\\
-  \vskip6pt
-  {Then the statistical hypotheses of interest are}
-    \begin{equation*}
-      \label{eq:hypotheses}
-      \begin{array}{rl}
-        H_{0}: & \mu = 0 \\
-        H_{a}: & \mu \neq 0 \ .
-      \end{array}
-    \end{equation*}
-
+\subsection{Hypotheses \& reference distribution}
+Denote $\mu = E\left(\barbar{D}\right)$. Then the statistical hypotheses of interest are
+\begin{equation}
+ \label{eq:hypotheses}
+ \begin{array}{rl}
+ H_{0}: & \mu = 0 \\
+ H_{a}: & \mu \neq 0 \ .
+ \end{array}
+ \end{equation}
 %------------------------------------------------
 
-\subsection{Reference distribution}
-Modeling assumptions under $H_0$:\\
-Conditional on the cluster assignments.
-Further assume $D_{j\scriptscriptstyle{+}} \sim N(0, \sigma^2)$.
-Then the Clustered-$T$ statistic{\footnotemark}:\\
-\begin{equation*}
+\noindent To build a reference distribution, model the cluster sums as $D_{j\scriptscriptstyle{+}} \sim N(0, \sigma^2)$. Then, conditional on the cluster assignments and under $H_0$, our Clustered-$T$ statistic\\
+\begin{equation}
   \label{eq:tstat}
 T =  \frac{\overbar{d}}{S_d/\sqrt{m}}
-\end{equation*}
-follows $T \sim t(m-1)$ under $H_0$. \\
+\end{equation}
+follows a $t(m-1)$ distribution. \\
 A (two-sided) P-value is $2\times\text{Pr}[t(m-1) \ge |T|]$.
 
 %\pause
-{\footnotetext{Inferences using $T$ apply to $\barbar{D}$ and the MD score as both are constant scalings of $\overbar{D}$.}}
+%{\footnotetext{Inferences using $T$ apply to $\barbar{D}$ and the MD score as both are constant scalings of $\overbar{D}$.}}
 
 % ----------------------------------------------------------------------------------------
 %   Monte Carol Evaluation
 %----------------------------------------------------------------------------------------
 \section{Monte Carlo evaluation}
+We evaluate our methodology and compare to the leading alternatives, a Wilcoxon signed-rank test and an unadjusted (na\"ive) $t$-test.
 \subsection{Simulation settings}
-
 \begin{center}
 \begin{tabular}{lll}
-Design \\variable & Description & Values\\
+Variable & Description & Values\\
 \hline
 $G$ & Number of genes in pathway & \{15, 30, 50, 100, 200, 400\}\\
-$p$ & the proportion of DEGs\footnotemark & \{0, 0.3, 0.6, 0.9\}\\
+$p$ & the proportion of DEGs & \{0, 0.3, 0.6, 0.9\}\\
 $\psi$ & fold change of DEGs & \{1.5, 2, 4\}\\
 $\mathbf{R}$ & pathway correlation structure & \{Independent, Block, All\}\\
 \end{tabular}
@@ -239,53 +224,48 @@ $\mathbf{R}$ & pathway correlation structure & \{Independent, Block, All\}\\
 \begin{itemize}
 \item \lq Non-DEG \rq: \(X_{i} \sim NegBin(\hat{\mu_{i}},\hat{\delta_{i}})\)
   %\pause
-\item \lq DEG \rq: \(X_{i} \sim NegBin(\psi \times \hat{\mu_{i}},\hat{\delta_{i}})\)
+\item \lq DEG \rq: \(X_{i} \sim NegBin(\color{Red}\psi \color{Black} \times \hat{\mu_{i}},\hat{\delta_{i}})\)
 \end{itemize}
 
-\footnotetext{DEG = differentially expressed gene}
+%\footnotetext{Block structure indicates clusters are true}
+%\footnotetext{DEG = differentially expressed gene}
 
 % ------------------------------------------------
-\subsection{Defining realistic gene sets}
-\begin{center}\vspace{1cm}
-\includegraphics[width=0.8\linewidth]{cT_r_hist_fig_S1_all}
-\captionof{figure}{\color{Green} Main Algerian geothermal areas (Fekraoui and Abouriche, 1995)}
-\end{center}\vspace{1cm}
+%% \subsection{Defining realistic gene sets}
 
 % ------------------------------------------------
 
 \subsection{Simulating pathways via copulas}
-2000 simulated bivariate gene counts with specified correlation of 0.49, simulated using copulas\cite{Genest2007,Yan2007}
+To induce correlation, we use copulas~\cite{Yan2007}.
 \begin{center}\vspace{1cm}
 \includegraphics[width=0.5\linewidth]{copula_viz}
-\captionof{figure}{\color{Green} Main Algerian geothermal areas (Fekraoui and Abouriche, 1995)}
+\captionof{figure}{\color{Black} 2000 simulated bivariate gene counts with specified correlation of 0.49 and heterogeneous negative binomial marginals}
 \end{center}\vspace{1cm}
 
 %------------------------------------------------
 
-\subsection{Evaluation:~performance}
+\subsection{Evaluation:~operating characteristics}
 \begin{center}\vspace{1cm}
 \includegraphics[width=0.8\linewidth]{clustered_T_fpr_small}
-\captionof{figure}{\color{Green} Simulation results:~false positive rates}
+\captionof{figure}{\color{Black} The Clustered-$T$ statistic maintains a 5\% size of the test under various correlation structures --- \lq Independent\rq~simulates genes independently, \lq Block\rq~simulates under the clustering assumptions, \lq All\rq~allows all genes to be co-expressed.}
 \end{center}\vspace{1cm}
 
 \begin{center}\vspace{1cm}
-\includegraphics[width=0.8\linewidth]{clustered_T_power_small}
-\captionof{figure}{\color{Green} Simulation results:~power for the Clustered-\itshape{T}}
+\includegraphics[width=1.0\linewidth]{clustered_T_power_small}
+\captionof{figure}{\color{Black} The Clustered-$T$ displays adequate power while increasing fold change of DEGs (solid line = 4, dashed = 2, dash-dot = 1.5).}
 \end{center}\vspace{0.2cm}
 
 %----------------------------------------------------------------------------------------
 %   Application
 %----------------------------------------------------------------------------------------
 \section{Application}
-
-Single-subject inference for a triple negative breast cancer patient.
- Four top-hit differentially expressed pathways for a TNBC patient when testing 3411 GO-BP pathways.
+We present our patient's four top-hit differentially expressed pathways when testing 3411 GO-BP pathways. These pathways represent potential therapeutic targets to enable precision medicine.
 
 %% \begin{table}
 %%    \label{tab:topHits}
 %% %%\begin{tabular}{>{\raggedright}p{0.375\linewidth} | c | c | c |c |c}
 %%  \hspace*{0pt}\makebox[\linewidth][c]
-\begin{tabular} {>{\raggedright}p{0.375\linewidth} | c | c | c |c |c}
+\begin{tabular} {>{\raggedright}p{0.375\linewidth} | c c c c c}
    Gene set description & $\barbar{D}$ & $T$-stat & P-value & $G$ & $m$ \\
     \hline \hline
    pos reg of cell adhesion & -0.75 & -4.92 & 0.00011 & 226 & 19 \\
@@ -308,10 +288,9 @@ Single-subject inference for a triple negative breast cancer patient.
 
 \section{Concluding remarks}
 
-\subsection{Illustrative summary}
 \begin{center}\vspace{1cm}
 \includegraphics[width=0.6\linewidth]{NxT_MD_fig1_summary}
-\captionof{figure}{\color{Green} Simulation results:~power for the Clustered-\itshape{T}}
+\captionof{figure}{\color{Black} Illustrative summary. The axes represent baseline (horizontal) and tumor (vertical) expression within a pathway. The diagonal line visualizes equal expression. The coloring of each gene indicates cluster assignment. The vertical green line displays gene-wise differential expression. We use a clustered-correlated variance estimator to assess differential pathway expression.}
 \end{center}\vspace{1cm}
 
 %----------------------------------------------------------------------------------------
@@ -328,7 +307,7 @@ Single-subject inference for a triple negative breast cancer patient.
 
 \subsection*{Acknowledgments}
 
-We gratefully acknowledge the kind and helpful input of Mr. Qike Li, Dr. Joanne Berghout, Dr. Ikbel Achour, Dr. Colleen Kenost, Dr. Haiquan Li, Dr. Nima Pouladi, Dr. Ryan Gutenkunst, and Dr. Joseph Watkins. This material is based upon work supported by the U.S. National Science Foundation under Grant No. 1228509 and by the U.S. National Institutes of Health under Grant No. R03ES027394.
+This material is based upon work supported by the U.S. National Science Foundation under Grant No. 1228509 and by the U.S. National Institutes of Health under Grant No. R03ES027394.
  %----------------------------------------------------------------------------------------
 %   REFERENCES
 %----------------------------------------------------------------------------------------
