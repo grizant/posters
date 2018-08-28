@@ -59,7 +59,7 @@
 \VeryHuge \color{NavyBlue} \textbf{Testing for differentially expressed genetic pathways with single-subject N-of-1 data in the presence of inter-gene correlation~\cite{Schissler2018}} \color{Black}\\ % Title
 %% \Huge\textit{Country Update}\\[2.4cm] % Subtitle
 [1.0cm]
-\Huge \textbf{\underline{A.~Grant Schissler$^{1}$},~Walter$^{2-5}$ W.~Piegorsch,~and Yves A.~Lussier$^{4-6}$}\\[0.5cm] % Author(s)
+\Huge \textbf{\underline{A.~Grant Schissler$^{1,4}$},~Walter W.~Piegorsch$^{2-5}$,~and Yves A.~Lussier$^{4-6}$}\\[0.5cm] % Author(s)
 \huge $^{1}$Department of Mathematics \& Statistics, University of Nevada, Reno, NV, USA\\[0.4cm] % University/organization
 {\huge $^{2}$Interdisciplinary Program in Statistics, $^{3}$Department of Mathematics, $^{4}$Center for Biomedical Informatics and Biostatistics (CB2), $^{5}$BIO5 Institute, $^{6}$Department of Medicine, University of Arizona, Tucson, AZ, USA}.
 %\Large \texttt{aschissler@unr.edu}\\
@@ -97,12 +97,12 @@
 \color{Black} % SaddleBrown color for the introduction
 \section{Introduction}
 
-We seek to assess a patient's differential RNA expression, but \textit{not} for individual genes --- for collections of genes (a gene set or \textit{pathway}). We call this finding Differentially Expressed Pathways (DEPs) as opposed to Differentially Expressed Genes (DEGs). 
+We seek to assess a patient's differential RNA expression, but \textit{not} for individual genes, for collections of genes (a gene set or \textit{pathway}). We call this detecting Differentially Expressed Pathways (DEPs) as opposed to Differentially Expressed Genes (DEGs). 
 
 \subsection{Motivating data \& background}
 %% \subsection{Motivating data}
 
-The table below contains paired RNA-seq ($log_{2}$-normalized) expression data derived from a triple negative breast cancer patient~\cite{weinstein2013cancer} within a Gene Ontology~\cite{Ashburner2000} pathway.\\
+The table below contains paired RNA-seq ($log_{2}$-normalized) expression data derived from a triple negative breast cancer patient~\cite{weinstein2013cancer}. The genes listed here are contained within a Gene Ontology~\cite{Ashburner2000} pathway.\\
 
 \begin{tabular}{l|ccc}
 \hline
@@ -129,7 +129,7 @@ Gene & Tumor expression &  Normal expression & Difference\\
 
 \begin{center}\vspace{1cm}
 \includegraphics[width=1\linewidth]{N-of-1-pathways-dep-flowchart}
-\captionof{figure}{\color{Black} Conceptual workflow to enable precision medicine from within-patient, paired expression data.}
+\captionof{figure}{\color{Black} Conceptual workflow to enable precision medicine from within-patient paired expression data.}
 \end{center}%\vspace{1cm}
 
 % ----------------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ We seek to improve upon the first N-of-1-\textit{pathways} testing procedure, a 
 
 % ------------------------------------------------
 \subsection{Clustering of positively co-expressed genes}
-Accounting for inter-gene correlatinot is difficutlt with only limtied samples. Instead of estimating directly, we use a robust cluster-correlated variance estimator~\cite{Williams2000}. This requires that we cluster genes \textit{a priori}, using a database of samples. We omit the clustering procedure here, see Reference~\cite{Schissler2018} for details.
+Accounting for inter-gene correlatinot is difficutlt with only limtied samples. Instead of estimating covariance directly, we use a robust cluster-correlated variance estimator~\cite{Williams2000}. This requires that we cluster genes \textit{a priori}, using a database of samples. We omit the clustering procedure here, see Reference~\cite{Schissler2018} for details.
 
 \subsection{Notation}
 Once clustered, we develop our statistic using the following notation:\\
@@ -239,7 +239,7 @@ $\mathbf{R}$ & pathway correlation structure & \{Independent, Block, All\}\\
 To induce correlation, we use copulas~\cite{Yan2007}.
 \begin{center}\vspace{1cm}
 \includegraphics[width=0.5\linewidth]{copula_viz}
-\captionof{figure}{\color{Black} 2000 simulated bivariate gene counts with specified correlation of 0.49 and heterogeneous negative binomial marginals}
+\captionof{figure}{\color{Black} 2000 simulated bivariate gene counts with specified correlation of 0.49 and heterogeneous negative binomial marginals.}
 \end{center}\vspace{1cm}
 
 %------------------------------------------------
@@ -252,7 +252,7 @@ To induce correlation, we use copulas~\cite{Yan2007}.
 
 \begin{center}\vspace{1cm}
 \includegraphics[width=1.0\linewidth]{clustered_T_power_small}
-\captionof{figure}{\color{Black} The Clustered-$T$ displays adequate power while increasing fold change of DEGs (solid line = 4, dashed = 2, dash-dot = 1.5).}
+\captionof{figure}{\color{Black} The Clustered-$T$ displays adequate power while increasing fold change of DEGs (dash-dot = 1.5, dashed = 2, solid line = 4).}
 \end{center}\vspace{0.2cm}
 
 %----------------------------------------------------------------------------------------
